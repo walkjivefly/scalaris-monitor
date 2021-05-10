@@ -1,0 +1,5 @@
+{
+    "require": {
+        "coinpaprika/coinpaprika-api-php-client": "^1.1"
+    }
+}
