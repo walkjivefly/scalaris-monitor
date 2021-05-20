@@ -42,7 +42,6 @@
 									<th>Updated</th>
 									<th>Type</th>
 									<th>Status</th>
-									<th>Details</th>
 								</tr>
 					  		</thead>
 							<tbody>
@@ -56,51 +55,6 @@
 										<td><?=$order['updatedAt'] ?></td>
 										<td><?=$order['orderType'] ?></td>
 										<td><?=$order['status'] ?></td>
-
-										<td>										   
-											<div class="btn-group pull-right" style="padding:5px 0px 3px 0px; margin-bottom:0px">
-												<button type="button" class="btn btn-default btn-xs" data-toggle="modal" <?php echo 'data-target="#order'.$i.'"'; ?>>Details</button>
-												<!-- Modal -->
-												<div <?php echo 'id="order'.$i.'"'; ?> class="modal fade" role="dialog">
-  													<div class="modal-dialog modal-dialog-scrollable modal-lg">
-    													<!-- Modal content-->
-    													<div class="modal-content">
-      														<div class="modal-header">
-		   														<button type="button" class="close" data-dismiss="modal">&times;</button>
-        														<h4 class="modal-title">NFT details</h4>
-      														</div>
-      														<div class="modal-body">
-																<?php
-																	$orderinfo = $content['scalarisd']->dxgetorder($order['id']);
-																	foreach($orderinfo as $key => $data){ ?>
-																		<p><?= $key . ": " . $data ?></p>
-																<?php } ?>
-      														</div>
-      														<div class="modal-footer">
-        														<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      														</div>
-    													</div>
-  													</div>
-												</div>
-										<!--		<button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-													<span class="caret"></span>
-													<span class="sr-only">Toggle Dropdown</span>
-												</button>
-												<ul class="dropdown-menu">
-													<li><a href="?p=nfts&proto=<?= $token['nftProtocolId'] ?>" target="_self">Same protocol</a></li>
-													<li><a href="?p=nfts&owner=<?= $token['nftOwnerKeyId'] ?>" target="_self">Same owner</a></li>
-													<li><a href="?p=nfts&proto=<?= $token['nftProtocolId'] ?>&owner=<?= $token['nftOwnerKeyId'] ?>" target="_self">Same protocol and owner</a></li>
-													<li class="divider"></li>
-													<li><a href="https://iquidus-01.crownplatform.com/api/getrawtransaction?txid=<?= $token['registrationTxHash']?>&decrypt=1" target="_blank"> Txn details</a></li>
-													<li class="divider"></li>
-													<li><a href="https://iquidus-01.crownplatform.com/tx/<?= $token['registrationTxHash'] ?>" target="_blank"><i class="fa fa-globe fa-lg" style="color:lightblue"></i> Iquidus</a></li>
-													<li><a href="https://insight-02.crownplatform.com/tx/<?= $token['registrationTxHash'] ?>" target="_blank"><i class="fa fa-globe fa-lg" style="color:lightblue"></i> Insight</a></li>
-													<li><a href="https://explorer.scalaris.info/crw/tx.dws?<?= $token['registrationTxHash'] ?>" target="_blank"><i class="fa fa-globe fa-lg" style="color:lightblue"></i> Iquidus</a></li>
-												</ul>  -->
-											</div>										   
-								   		</td>										   
-
-
 									</tr>
 								<?php } } ?>						
 							</tbody>
