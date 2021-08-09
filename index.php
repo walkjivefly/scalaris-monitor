@@ -21,7 +21,7 @@ if(!(empty(Config::ACCESS_IP) OR $_SERVER['REMOTE_ADDR'] == "127.0.0.1" OR $_SER
 // Cronjob Rule Run
 if(isset($_GET['job']) AND $_GET['job'] === substr(hash('sha256', Config::PASSWORD."ebe8d532"),0,24)){
 	require_once 'src/Utility.php';
-	$scalarisd = new jsonRPCClient('http://'.Config::RPC_USER.':'.Config::RPC_PASSWORD.'@'.Config::RPC_IP.'/');
+	$coind = new jsonRPCClient('http://'.Config::RPC_USER.':'.Config::RPC_PASSWORD.'@'.Config::RPC_IP.'/');
 	Rule::run();
 	exit;
 }
@@ -69,7 +69,7 @@ $trafficC = 0;
 $trafficCIn = 0;
 $trafficCOut = 0;
 $newPeersCount = 0;
-$scalarisd = new jsonRPCClient('http://'.Config::RPC_USER.':'.Config::RPC_PASSWORD.'@'.Config::RPC_IP.'/', Config::DEBUG);
+$coind = new jsonRPCClient('http://'.Config::RPC_USER.':'.Config::RPC_PASSWORD.'@'.Config::RPC_IP.'/', Config::DEBUG);
 $coinApi = new \Coinpaprika\Client();
 
 // Content

@@ -3,7 +3,7 @@
 namespace App;
 
 function createMainContent(){
-	global $scalarisd, $coinApi, $trafficCIn, $trafficCOut, $newPeersCount;
+	global $coind, $coinApi, $trafficCIn, $trafficCOut, $newPeersCount;
 
 	date_default_timezone_set('UTC');
 
@@ -11,11 +11,11 @@ function createMainContent(){
 	$peerCount = count($peers);
 
 	$content = [];
-	$nodecounts = $scalarisd->servicenodecount();
+	$nodecounts = $coind->servicenodecount();
 	$content['totalNodes'] = $nodecounts["total"];
 	$content['onlineNodes'] = $nodecounts["online"];
 
-	$content['nextSuperblock'] = $scalarisd->nextsuperblock();
+	$content['nextSuperblock'] = $coind->nextsuperblock();
 	$content['node'] = new Node();
 	if(Config::PEERS_GEO){
 		$content['map'] = createMapJs($peerCount);
@@ -30,18 +30,18 @@ function createMainContent(){
 
 	// Current price info
 	$content['priceInfo'] = getPriceInfo($coinApi);
-	$txoutset = $scalarisd->gettxoutsetinfo();
+	$txoutset = $coind->gettxoutsetinfo();
 	$content['issued'] = floor($txoutset['total_amount']);
 	if($content['priceInfo']['SCA/USD'] != "N/A"){
 		$content['marketCap'] = round($txoutset['total_amount'] * $content['priceInfo']['SCA/USD'], 0);
 	}else{$content['marketCap'] = "N/A";}
 
 	// Open orders count
-	$openorders = $scalarisd->dxGetOrders();
+	$openorders = $coind->dxGetOrders();
 	$content['openOrders'] = count($openorders);
 
 	// Completed orders
-	$completedorders = $scalarisd->dxGetTradingData(1440);
+	$completedorders = $coind->dxGetTradingData(1440);
 	$content['recentOrders'] = count($completedorders);
 
 	return $content;
@@ -49,10 +49,10 @@ function createMainContent(){
 }
 
 function createPeerContent(){
-	global $trafficC, $trafficCIn, $trafficCOut, $scalarisd, $newPeersCount;
+	global $trafficC, $trafficCIn, $trafficCOut, $coind, $newPeersCount;
 
 	$peers = getPeerData();
-	$netinfo = $scalarisd->getnettotals();
+	$netinfo = $coind->getnettotals();
 
 	$content = getMostPop($peers);
 	$content['peers'] = $peers;
@@ -86,7 +86,7 @@ function getPriceInfo($coinApi){
 }
 
 function createBlocksContent(){
-	global $scalarisd;
+	global $coind;
 
 	$content = [];
 	$content["totalTx"] = 0;
@@ -95,10 +95,10 @@ function createBlocksContent(){
 	$content["segwitCount"] = 0;
 	$blocktime = 60;
 
-	$blockHash = $scalarisd->getbestblockhash();
+	$blockHash = $coind->getbestblockhash();
 
 	for($i = 0; $i < Config::DISPLAY_BLOCKS; $i++){
-		$block = $scalarisd->getblock($blockHash);
+		$block = $coind->getblock($blockHash);
 		if($i==0){ 
 			$content["latest"] = $block["height"];
 		}
@@ -111,8 +111,8 @@ function createBlocksContent(){
 		$content["blocks"][$block["height"]]["timeago"] = round((time() - $block["time"])/60);
 		$content["blocks"][$block["height"]]["coinbasetx"] = $block["tx"][0];
 		$content["blocks"][$block["height"]]["coinstaketx"] = $block["tx"][1];
-		$coinbaseTx = $scalarisd->getrawtransaction($block["tx"][0], 1);
-		$coinstakeTx = $scalarisd->getrawtransaction($block["tx"][1], 1);
+		$coinbaseTx = $coind->getrawtransaction($block["tx"][0], 1);
+		$coinstakeTx = $coind->getrawtransaction($block["tx"][1], 1);
 		$coinbase = $coinbaseTx["vout"][1]["value"];
 		$coinstake = $coinstakeTx["vout"][0]["value"];
 		$content["blocks"][$block["height"]]["fees"] = round($coinbase + $coinstake, 5);
@@ -134,11 +134,11 @@ function createBlocksContent(){
 }
 
 function createForksContent(){
-	global $scalarisd;
+	global $coind;
 
 	$content["recentForks"] = 0;	// Count forks in last 24h
 
-	$forks = $scalarisd->getchaintips();
+	$forks = $coind->getchaintips();
 	$i = 0;
 	$lastTime = 0;
 
@@ -153,7 +153,7 @@ function createForksContent(){
 		$content["blocks"][$i]["status"] = $fork["status"];
 
 		if($fork["status"] != "headers-only" AND $fork["status"] != "unknown"){
-			$block = $scalarisd->getblock($fork["hash"]);
+			$block = $coind->getblock($fork["hash"]);
 			$content["blocks"][$i]["size"] = round($block["size"]/1000,2);
 			$content["blocks"][$i]["time"] = getDateTime($block["time"]);
 			$lastTime = $block["time"];
@@ -175,9 +175,9 @@ function createForksContent(){
 }
 
 function createMempoolContent(){
-	global $scalarisd;
+	global $coind;
 
-	$content['txs'] = $scalarisd->getrawmempool(TRUE);
+	$content['txs'] = $coind->getrawmempool(TRUE);
 	$content['txs'] = array_slice($content['txs'], 0, CONFIG::DISPLAY_TXS);
 	$content['node'] = new Node();
 
@@ -185,10 +185,10 @@ function createMempoolContent(){
 }
 
 function createNodesContent(){
-	global $scalarisd, $newNodesCount;
+	global $coind, $newNodesCount;
 
 	$nodes = getNodesData();
-	$counts = $scalarisd->servicenodecount();
+	$counts = $coind->servicenodecount();
 
 	$content['nodes'] = $nodes;
 	$content['totalNodes'] = $counts["total"];
@@ -200,11 +200,11 @@ function createNodesContent(){
 }
 
 function createGovernanceContent(){
-	global $scalarisd;
-	$content["nextSuperblock"] = $scalarisd->nextsuperblock();
-	$proposals = $scalarisd->listproposals($content["nextSuperblock"]-42000+1);
-	$mnCount = $scalarisd->servicenodecount()["total"];
-	$currentBlock = $scalarisd->getblockcount();
+	global $coind;
+	$content["nextSuperblock"] = $coind->nextsuperblock();
+	$proposals = $coind->listproposals($content["nextSuperblock"]-42000+1);
+	$mnCount = $coind->servicenodecount()["total"];
+	$currentBlock = $coind->getblockcount();
 	$content["nextDate"] = "Estimated " . date("D j F Y H:iT", time()+($content["nextSuperblock"]-$currentBlock)*60);
 	$content["pCutoff"] = "Estimated new proposals deadline: " . date("D j F Y H:iT", time()+($content["nextSuperblock"]-2000-$currentBlock)*60);
 	$content["vCutoff"] = "Estimated voting deadline: " . date("D j F Y H:iT", time()+($content["nextSuperblock"]-106-$currentBlock)*60);
@@ -278,10 +278,10 @@ function createGovernanceContent(){
 }
 
 function createOldGovernanceContent(){
-	global $scalarisd;
-	$content["nextSuperblock"] = $scalarisd->nextsuperblock();
-	$proposals = $scalarisd->listproposals(1);
-	$currentBlock = $scalarisd->getblockcount();
+	global $coind;
+	$content["nextSuperblock"] = $coind->nextsuperblock();
+	$proposals = $coind->listproposals(1);
+	$currentBlock = $coind->getblockcount();
 	$content["nextDate"] = "Estimated " . date("D j F Y H:iT", time()+($content["nextSuperblock"]-$currentBlock)*60);
 	$content["budgetRequested"] = 0;
 	$content["budgetPassing"] = 0;
@@ -316,7 +316,7 @@ function createOldGovernanceContent(){
 }
 
 function createOpenOrdersContent(){
-	global $scalarisd;
+	global $coind;
 	
 	$content = [];
 	$content["openOrderCount"] = 0;
@@ -324,7 +324,7 @@ function createOpenOrdersContent(){
 	$content["otherCount"] = 0;
 	$content["totalCount"] = 0;
 
-	$openorders = $scalarisd->dxGetOrders();
+	$openorders = $coind->dxGetOrders();
 	$i = 0;
 	foreach($openorders as $order){
 		$content["order"][$i]["id"] = $order["id"];
@@ -351,12 +351,12 @@ function createOpenOrdersContent(){
 		$i++;
 	}
 	$content["totalCount"] = $i;
-	$content['scalarisd'] = $scalarisd;
+	$content['coind'] = $coind;
     return $content;
 }
 
 function createPastOrdersContent($days = 30){
-	global $scalarisd;
+	global $coind;
 
 	$content = [];
 	$content["days"] = $days;
@@ -364,7 +364,7 @@ function createPastOrdersContent($days = 30){
 	$blocks = $days * 1440;
 	$content["blocks"] = $blocks;
 
-	$pastorders = $scalarisd->dxGetTradingData($blocks);
+	$pastorders = $coind->dxGetTradingData($blocks);
 	$i = 0;
 	foreach($pastorders as $order){
 		$content["order"][$i]["time"] = getDateTime($order["timestamp"]);

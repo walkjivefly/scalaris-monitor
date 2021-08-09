@@ -50,12 +50,12 @@ class Node {
 	
 	
 	function __construct() {
-		global $scalarisd;
-		$networkInfo = $scalarisd->getnetworkinfo();
-		$mempoolInfo = $scalarisd->getmempoolinfo();
-		$blockchainInfo = $scalarisd->getblockchaininfo();
-		$miningInfo = $scalarisd->getmininginfo();
-		$tInfo = $scalarisd->getnettotals();
+		global $coind;
+		$networkInfo = $coind->getnetworkinfo();
+		$mempoolInfo = $coind->getmempoolinfo();
+		$blockchainInfo = $coind->getblockchaininfo();
+		$miningInfo = $coind->getmininginfo();
+		$tInfo = $coind->getnettotals();
 		
 		$this->blockHeight = checkInt($blockchainInfo["blocks"]);
 		$this->pruMode = false;   // after codebase upgrade    checkBool($blockchainInfo["pruned"]);
@@ -107,7 +107,7 @@ class Node {
 		$this->bHeight = checkInt($blockchainInfo["blocks"]);
 		$this->hHeight = checkInt($blockchainInfo["headers"]);
 		
-		$blockInfo = $scalarisd->getblock($blockchainInfo["bestblockhash"]);
+		$blockInfo = $coind->getblock($blockchainInfo["bestblockhash"]);
 		$this->bHeightAgo = round((time()-checkInt($blockInfo["time"]))/60,1);
 		
 		$this->diff = checkInt($blockchainInfo["difficulty"]);
@@ -116,7 +116,7 @@ class Node {
 		$this->softForks = ""; // after codebase upgrade  checkSoftFork($blockchainInfo["bip9_softforks"]);	
 		// Wallet Function
 		try{
-			$walletInfo = $scalarisd->getwalletinfo();
+			$walletInfo = $coind->getwalletinfo();
 			$this->walVer = checkInt($walletInfo["walletversion"]);	
 			$this->walBal = checkInt($walletInfo["balance"]);	
 			$this->waluBal = 0; // checkInt($walletInfo["unconfirmed_balance"]);	

@@ -397,14 +397,14 @@ function getMostPop($peers){
 // Peer functions
 
 function getPeerData(bool $geo = NULL){
-	global $scalarisd;
+	global $coind;
 	
 	// If not set, use config setting
 	if(is_null($geo)){
 		$geo = CONFIG::PEERS_GEO;
 	}
 	
-	$peerInfo = $scalarisd->getpeerinfo(); 
+	$peerInfo = $coind->getpeerinfo(); 
 	if($geo){
 		$peers = createPeersGeo($peerInfo);
 	}else{
@@ -584,14 +584,14 @@ function createPeersGeo($peerinfo){
 // Nodes functions
 
 function getNodesData(bool $geo = NULL){
-	global $scalarisd;
+	global $coind;
 	
 	// If not set, use config setting
 	if(is_null($geo)){
 		$geo = CONFIG::NODES_GEO;
 	}
 	
-	$snodeInfo = $scalarisd->servicenodelist(); 
+	$snodeInfo = $coind->servicenodelist(); 
 	if($geo){
 		$nodes = createNodesGeo($snodeInfo);
 	}else{
