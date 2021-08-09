@@ -18,15 +18,6 @@ if(!(empty(Config::ACCESS_IP) OR $_SERVER['REMOTE_ADDR'] == "127.0.0.1" OR $_SER
 	exit; 
 }
 
-// Cronjob Rule Run
-if(isset($_GET['job']) AND $_GET['job'] === substr(hash('sha256', Config::PASSWORD."ebe8d532"),0,24)){
-	require_once 'src/Utility.php';
-	$coind = new jsonRPCClient('http://'.Config::RPC_USER.':'.Config::RPC_PASSWORD.'@'.Config::RPC_IP.'/');
-	Rule::run();
-	exit;
-}
-
-
 // Start check user session
 session_start();
 $passToken = hash('sha256', Config::PASSWORD."ibe81rn6");
