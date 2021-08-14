@@ -177,31 +177,6 @@ if(empty($_GET) OR $_GET['p'] == 'main') {
 	$content= createPastOrdersContent(30);
 	$data = array('section' => 'pastorders', 'title' => 'Past Orders', 'content' => $content);
   
-// Settings Page	
-}elseif($_GET['p'] == 'settings') {
-	if(isset($_GET['c'])  AND $_GET['t'] == $_SESSION['csfrToken']){
-		if(isset($_GET['c']) AND $_GET['c'] == 'geosave'){
-			// Check if Geo Peer Tracing was changed
-			if(isset($_POST['geopeers']) AND $_POST['geopeers'] == 'on'){
-				 $geoPeers = 'true';
-			}else{
-				$geoPeers = 'false';
-			}
-
-			// Write new settings in config.php
-			if (file_exists('config.php')){
-				$conf = file_get_contents('config.php');
-				$conf = preg_replace('/geoPeers = (true|false);/i', 'geoPeers = '.$geoPeers.';', $conf);
-				file_put_contents('config.php', $conf);
-				$message = 'Setings succesfully saved';
-			}else{
-				$error = 'Config file does not exist';
-			}				
-			$message = 'Settings succesfully saved';
-		}
-	}
-   $data = array('section' => 'settings', 'title' => 'Settings', 'geoPeers' => Config::PEERS_GEO);
-
 // About Page	
 }elseif($_GET['p'] == 'about') {
 	$data = array('section' => 'about', 'title' => 'About'); 
