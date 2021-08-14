@@ -1,4 +1,4 @@
-# Scalaris Monitor v0.1.0
+# Scalaris Monitor v0.1.1
 
 Scalaris Monitor (SPM) is a visualisation and monitoring system for the Scalaris network.
 ![](assets/images/scalarismonitor.png)
@@ -23,8 +23,9 @@ Scalaris Monitor (SPM) is a visualisation and monitoring system for the Scalaris
 * Scalaris v1.0.0+
 * Web server (e.g. Apache, PHP built-in web server)
 * PHP 7.0.0+
-*   php-cli php-common php-curl php-fpm php-json php-mbstring php-opcache php-readline
+*   php-cli php-common php-curl php-fpm php-json php-mbstring php-opcache php-readline php-sqlite3
 * cURL
+* SQLite3
 
 
 ## Installation
