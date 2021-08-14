@@ -48,10 +48,12 @@ if(isset($_SESSION['login']) AND $_SESSION['login'] === TRUE){
 //	exit; 	
 }
 
-// Load utiliy and content creator functions
+// Load utility and content creator functions
 require_once 'src/Utility.php';
 require_once 'src/Content.php';
 require_once __DIR__ . '/vendor/autoload.php';
+
+use SQLite3;
 
 // Globals
 $error = '';
@@ -62,6 +64,27 @@ $trafficCOut = 0;
 $newPeersCount = 0;
 $coind = new jsonRPCClient('http://'.Config::RPC_USER.':'.Config::RPC_PASSWORD.'@'.Config::RPC_IP.'/', Config::DEBUG);
 $coinApi = new \Coinpaprika\Client();
+$db = new SQLite3('data/scalaris.db');
+
+// Do some database setup
+$db->enableExceptions(true);
+
+$db->exec('CREATE TABLE IF NOT EXISTS "pastorders"(
+	"id" VARCHAR PRIMARY KEY NOT NULL,
+	"timestamp" INTEGER NOT NULL,
+	"fee_txid" VARCHAR NOT NULL,
+	"nodepubkey" VARCHAR NOT NULL,
+	"taker" VARCHAR NOT NULL,
+	"taker_size" INTEGER NOT NULL,
+	"maker" VARCHAR NOT NULL,
+	"maker_size" INTEGER NOT NULL
+)');
+
+$db->exec('CREATE TABLE IF NOT EXISTS "events"(
+	"lastorderheight" INTEGER,
+	"timestamp" INTEGER
+)');
+
 
 // Content
 // Main Page
