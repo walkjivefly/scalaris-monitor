@@ -3,7 +3,7 @@
 namespace App;
 
 function createMainContent(){
-	global $coind, $coinApi, $trafficCIn, $trafficCOut, $newPeersCount;
+	global $coind, $coinApi, $db, $trafficCIn, $trafficCOut, $newPeersCount;
 
 	date_default_timezone_set('UTC');
 
@@ -41,9 +41,10 @@ function createMainContent(){
 	$content['openOrders'] = count($openorders);
 
 	// Completed orders
-	$completedorders = $coind->dxGetTradingData(1440);
-	$content['recentOrders'] = count($completedorders);
-
+	updatePastOrders();
+	$content['recentOrders'] = $db->querySingle('SELECT COUNT(*) FROM "pastorders" WHERE "timestamp" >= strftime("%s","now")-86400');
+	$content['alltimeOrders'] = $db->querySingle('SELECT COUNT(*) FROM "pastorders"');
+	
 	return $content;
 	
 }
@@ -355,8 +356,57 @@ function createOpenOrdersContent(){
     return $content;
 }
 
+function updatePastOrders() {
+	global $coind, $db;
+	
+    $height = $coind->getblockcount();
+    $lastheight = $db->querySingle('SELECT "lastorderheight" from "events"');
+    $blocks = $height - $lastheight;
+    if($blocks > 0){
+        //print("Fetching ".$blocks." blocks\n");
+ 
+        $pastorders = $coind->dxGetTradingData($blocks);
+
+        $statement = $db->prepare('INSERT INTO "pastorders" ("id", "timestamp", "fee_txid", "nodepubkey", "taker", "taker_size", "maker", "maker_size") VALUES (:id, :tstamp, :fee_txid, :nodepubkey, :taker, :taker_size, :maker, :maker_size)');
+        $statement2 = $db->prepare('UPDATE "events" set "lastorderheight" = :height');
+        $statement2->bindValue(':height', $height);
+
+        $db->exec("BEGIN");
+
+        //$i = 0;
+        //$j = 0;
+        foreach($pastorders as $order){
+            $statement->bindValue(':id', $order['id']);
+            $statement->bindValue(':tstamp', $order['timestamp']);
+            $statement->bindValue(':fee_txid', $order['fee_txid']);
+            $statement->bindValue(':nodepubkey', $order['nodepubkey']);
+            $statement->bindValue(':taker', $order['taker']);
+            $statement->bindValue(':taker_size', $order['taker_size']);
+            $statement->bindValue(':maker', $order['maker']);
+            $statement->bindValue(':maker_size', $order['maker_size']);
+            try {
+                $statement->execute();
+            } catch (\Exception $e) {
+                print("Insert failed with " .$e->GetMessage()."\n");
+                //$j++;
+            }
+            //$i++;
+        }
+
+        $statement2->execute();
+        $db->exec("COMMIT");
+		$statement->close();
+		$statement2->close();
+        //$rows = $i - $j;
+        //print("Found ".$i." new completed trades, ".$rows." rows inserted.\n");    
+    }
+}
+
+	
 function createPastOrdersContent($days = 30){
-	global $coind;
+	global $coind, $db;
+
+	updatePastOrders();
 
 	$content = [];
 	$content['days'] = $days;
@@ -364,9 +414,11 @@ function createPastOrdersContent($days = 30){
 	$blocks = $days * 1440;
 	$content['blocks'] = $blocks;
 
-	$pastorders = $coind->dxGetTradingData($blocks);
+    $statement = $db->prepare('SELECT * FROM "pastorders" WHERE "timestamp" >= :since');
+    $statement->bindValue(':since', time() - $days * 86400);
+    $result = $statement->execute();
 	$i = 0;
-	foreach($pastorders as $order){
+	while ($order = $result->fetchArray()) {
 		$content['order'][$i]['time'] = getDateTime($order['timestamp']);
 		$content['order'][$i]['txid'] = $order['fee_txid'];
 		$content['order'][$i]['snodekey'] = $order['nodepubkey'];
@@ -378,6 +430,9 @@ function createPastOrdersContent($days = 30){
 		$i++;
 	}
 	$content['pastOrderCount'] = $i;
+	$result->finalize();
+    $statement->close();
+
 	return $content;
 }
 
