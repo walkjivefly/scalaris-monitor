@@ -8,8 +8,8 @@ function getServices($hex){
 	
 	// 1 = Network, 2 = Getutxo, 3 = Bloom, 4 = Witness, 5 = Xthin, 6 = Cash, 7 = Segwit2X, 10 = Network Limited
 	// No services
-	if($bit === "0"){
-		$services['None'] = "None";
+	if($bit === '0'){
+		$services['None'] = 'None';
 		return $services;
 	}
 	
@@ -17,33 +17,33 @@ function getServices($hex){
 	$bit = sprintf('%010d', $bit);	
 
 	if(substr($bit, -1) == 1){
-		$services['Network'] = "N";
+		$services['Network'] = 'N';
 	}
 	if(substr($bit, -2, 1) == 1){
-		$services['Getutxo'] = "GT";
+		$services['Getutxo'] = 'GT';
 	}  
 	if(substr($bit, -3, 1) == 1){
-		$services['Bloom'] = "BL";
+		$services['Bloom'] = 'BL';
 	}
 	if(substr($bit, -4, 1) == 1){
-		$services['Witness'] = "WI";
+		$services['Witness'] = 'WI';
 	}
 	if(substr($bit, -5, 1) == 1){
-		$services['Xthin'] = "XT";
+		$services['Xthin'] = 'XT';
 	}
 	if(substr($bit, -6, 1) == 1){
-		$services['Cash'] = "CA";
+		$services['Cash'] = 'CA';
 	}
 	if(substr($bit, -8, 1) == 1){
-		$services['Segwit2X'] = "2X";
+		$services['Segwit2X'] = '2X';
 	}
 	if(substr($bit, -11, 1) == 1){
-		$services['Network Limited'] = "NL";
+		$services['Network Limited'] = 'NL';
 	}	 
 
 	// Unknown services
 	if(empty($services)){
-		$services['Unknown'] = "Unknown";
+		$services['Unknown'] = 'Unknown';
 	}
 
 	return $services;
@@ -67,14 +67,14 @@ function checkInt($int){
 
 function getCleanIP($ip){
 	$ip = checkIpPort($ip);
-	$ip = preg_replace("/:[0-9]{1,5}$/", "", $ip);
+	$ip = preg_replace('/:[0-9]{1,5}$/', '', $ip);
 	$ip = str_replace(array('[', ']'), '', $ip);
 	return $ip;
 }
 
 
 function checkIpBanList($ip){
-	if(preg_match("/^[0-9a-z:\.]{7,39}\/[0-9]{1,3}$/", $ip)) {
+	if(preg_match('/^[0-9a-z:\.]{7,39}\/[0-9]{1,3}$/', $ip)) {
 		return TRUE;
 	}else{
 		return FALSE;
@@ -82,7 +82,7 @@ function checkIpBanList($ip){
 }
 
 function checkIfIpv6($ip){
-	if(preg_match("/]|:/",$ip)){
+	if(preg_match('/]|:/',$ip)){
 		return true;
 	}else{
 		return false;
@@ -90,10 +90,10 @@ function checkIfIpv6($ip){
 }
 
 function checkIpPort($ip){
-	if(preg_match("/^\[{0,1}[0-9a-z:\.]{7,39}\]{0,1}:[0-9]{1,5}$/", $ip)) {
+	if(preg_match('/^\[{0,1}[0-9a-z:\.]{7,39}\]{0,1}:[0-9]{1,5}$/', $ip)) {
 		return $ip;
 	}else{
-		return "unknown";
+		return 'unknown';
 	}
 }
 
@@ -106,16 +106,16 @@ function checkBool($bool){
 }
 
 function checkServiceString($services){
-	if(preg_match("/^[0-9a-z]{16}$/",$services)){
+	if(preg_match('/^[0-9a-z]{16}$/',$services)){
 		return $services;
 	}else{
-		return "unknown";
+		return 'unknown';
 	}
 }
 
 function checkArray($array){
 	foreach ($array as $key => $value){
-		if(!preg_match("/^[a-z\*]{2,11}$/",$key) OR !is_int($value)){
+		if(!preg_match('/^[a-z\*]{2,11}$/',$key) OR !is_int($value)){
 			unset($array[$key]);
 		}
 	}
@@ -123,19 +123,19 @@ function checkArray($array){
 }
 
 function checkCountryCode($countryCode){
-	if(preg_match("/^[A-Z]{2}$/", $countryCode)){
+	if(preg_match('/^[A-Z]{2}$/', $countryCode)){
 		return $countryCode;
 	}else{
-		return "UN";
+		return 'UN';
 	}
 }
 
 function checkString($string){
 	$string = substr($string,0,50);
-	if(preg_match("/^[0-9a-zA-Z- \.,&]{2,50}$/",$string)){
+	if(preg_match('/^[0-9a-zA-Z- \.,&]{2,50}$/',$string)){
 		return $string;
 	}else{
-		return "Unknown";
+		return 'Unknown';
 	}
 }
 
@@ -151,7 +151,7 @@ function checkSegWitTx($size, $vsize){
 function getSegWitTx($txs){
 	$i = 0;
 	foreach($txs as $tx){
-		if(checkSegWitTx($tx["size"], $tx["vsize"])){
+		if(checkSegWitTx($tx['size'], $tx['vsize'])){
 			$i++;
 		}
 	}
@@ -160,7 +160,7 @@ function getSegWitTx($txs){
 
 function checkHosted($hoster){
 	$hosterList = json_decode(file_get_contents('data/hoster.json'), true);
-	if (in_array($hoster, $hosterList) OR preg_match("/server/i",$hoster)){
+	if (in_array($hoster, $hosterList) OR preg_match('/server/i',$hoster)){
 		return true;
 	}else{
 		return false;
@@ -184,7 +184,7 @@ function bytesToMb($size, int $round = 1){
 }
 
 function getDateTime($timestamp){
-	$date = date("Y-m-d H:i:sT",$timestamp);	
+	$date = date('Y-m-d H:i:sT',$timestamp);	
 	return $date;
 }
 
@@ -198,14 +198,14 @@ function checkMemPoolLimited($memPoolFee, $relayTxFee){
 
 function checkSoftFork($softForks){
 	foreach($softForks as $name => &$sf){  
-		if($sf['status'] === "started"){
-			if(!preg_match("/[A-Za-z0-9 ]{2,25}/", $name)){
+		if($sf['status'] === 'started'){
+			if(!preg_match('/[A-Za-z0-9 ]{2,25}/', $name)){
 				unset($softForks[$name]);
 				continue;
 			}
-			$sf['status'] = ucfirst(preg_replace("/[^A-Za-z]/", '', $sf['status']));
-			$sf['startTime'] = date("Y-m-d",$sf['startTime']);
-			$sf['timeout'] = date("Y-m-d",$sf['timeout']); 
+			$sf['status'] = ucfirst(preg_replace('/[^A-Za-z]/', '', $sf['status']));
+			$sf['startTime'] = date('Y-m-d',$sf['startTime']);
+			$sf['timeout'] = date('Y-m-d',$sf['timeout']); 
 			$sf['since'] = checkInt($sf['since']); 
 			if(isset($sf['statistics'])){
 				$sf['process'] = round(($sf['statistics']['count']/$sf['statistics']['period'])*100,1);
@@ -228,17 +228,17 @@ function getTrafficLimitSet($target){
 function calcMpUsage($usage, $max){
 	$value = ceil(($usage/$max)*100);
 	if($value == 0){
-		$icon = "fa-battery-empty";
-		$color = "green";
+		$icon = 'fa-battery-empty';
+		$color = 'green';
 	}elseif($value <= 50){
-		$icon = "fa-battery-half";
-		$color = "green";
+		$icon = 'fa-battery-half';
+		$color = 'green';
 	}elseif($value > 50 AND $value < 80){
-		$icon = "fa-battery-three-quarters";
-		$color = "orange";
+		$icon = 'fa-battery-three-quarters';
+		$color = 'orange';
 	}else{
-		$icon = "fa-battery-full";
-		$color = "red";		
+		$icon = 'fa-battery-full';
+		$color = 'red';		
 	}
 	$usageP = array('value' => $value, 'color' => $color, 'icon' => $icon);
 	return $usageP;
@@ -247,10 +247,10 @@ function calcMpUsage($usage, $max){
 
 function getBanReason($banreason){
 	switch ($banreason) {
-		case "manually added":
+		case 'manually added':
 			$banreason = 'User';
 			break;
-		case "node misbehaving":
+		case 'node misbehaving':
 			$banreason = 'Auto';
 			break;
 		default:
@@ -261,14 +261,14 @@ function getBanReason($banreason){
 }
 
 function getCleanClient($client){
-	$client = ltrim($client,"/");
-	$client = rtrim($client,"/");
+	$client = ltrim($client,'/');
+	$client = rtrim($client,'/');
 	return $client;
-	if(preg_match("/^Scalaris Core:([0]\.[0-9]{1,2}\.[0-9]{1,2})/",$client, $matches)) {
-		$client = "Core ".$matches[1];
+	if(preg_match('/^Scalaris Core:([0]\.[0-9]{1,2}\.[0-9]{1,2})/',$client, $matches)) {
+		$client = 'Core '.$matches[1];
 	}else{
-		$replace = array(":", "-SNAPSHOT", "\"", "'", "<", ">", "=");
-		$client = str_replace($replace, " ", $client);
+		$replace = array(':', '-SNAPSHOT', '\"', "'", '<', '>', '=');
+		$client = str_replace($replace, ' ', $client);
 	}
 	return $client;
 }
@@ -301,8 +301,8 @@ function checkAltClient($client){
 // Creates chart and legend (list)
 function getTopClients($peers){
 	$clients = [];
-	$chartLabels = "";
-	$chartValue = ""; 
+	$chartLabels = '';
+	$chartValue = ''; 
 	
 	foreach($peers as $peer){
 		if(isset($clients[$peer->client])){
@@ -327,8 +327,8 @@ function getTopClients($peers){
 		$client['share'] = round($client['count']/$peerCount,2)*100;
 	}
 	
-	$chartData['labels'] = rtrim($chartLabels, ",");
-	$chartData['values'] = rtrim($chartValue, ",");
+	$chartData['labels'] = rtrim($chartLabels, ',');
+	$chartData['values'] = rtrim($chartValue, ',');
 	$chartData['legend'] = $clients;
 
 	return $chartData;
@@ -442,8 +442,8 @@ function createPeersGeo($peerinfo){
 		$serializedPeers = file_get_contents('data/geodatapeers.inc');
 		$arrayPeers = unserialize($serializedPeers);
 		// Check if client was restarted and IDs reassigned
-		$oldestPeerId = reset($peerinfo)["id"];
-		$oldestPeerIp = getCleanIP(reset($peerinfo)["addr"]);
+		$oldestPeerId = reset($peerinfo)['id'];
+		$oldestPeerIp = getCleanIP(reset($peerinfo)['addr']);
 		$delete = false;
 		// Checks if we know about the oldest peer, if not we assume that we don't known any peer
 		foreach($arrayPeers as $key => $peer){
@@ -467,12 +467,12 @@ function createPeersGeo($peerinfo){
 		$noGeoData = true;
 	}
 	
-	// Find Ips that we don't have geo data for and that are "older" than 2 minutes
+	// Find Ips that we don't have geo data for and that are 'older' than 2 minutes
 	// First interation through all peers is used to collect ips for geo api call. This way the batch functionality can be used
 	$ips = [];
 	foreach($peerinfo as &$peer){
 		$tempIP = getCleanIP($peer['addr']);
-		$age = round((time()-$peer["conntime"])/60);
+		$age = round((time()-$peer['conntime'])/60);
 		if ($age >  2 AND ($noGeoData OR !in_array($tempIP,array_column($arrayPeers,0)))){
 			$ips[] = $tempIP;
 		}
@@ -504,21 +504,21 @@ function createPeersGeo($peerinfo){
 				$arrayPeers[$peerObj->id] = array($peerObj->ip, $countryCode, $country, $region, $city, $isp, $hosted, 1);
 			}elseif($peerObj->age > 2){
 				// If IP-Api.com call failed we set all data to Unknown and don't store the data
-				$countryCode = "UN";
-				$country = "Unknown";
-				$region = "Unknown";
-				$city = "Unknown";
-				$isp = "Unknown";		 
+				$countryCode = 'UN';
+				$country = 'Unknown';
+				$region = 'Unknown';
+				$city = 'Unknown';
+				$isp = 'Unknown';		 
 				$hosted = false;
 				// Only counted for peers older than 2 minutes
 				$newPeersCount++;				
 			}else{
 				// If peer is younger than 2 minutes
-				$countryCode = "NE";
-				$country = "New";
-				$region = "New";
-				$city = "New";
-				$isp = "New";		 
+				$countryCode = 'NE';
+				$country = 'New';
+				$region = 'New';
+				$city = 'New';
+				$isp = 'New';		 
 				$hosted = false;				
 				
 			}
@@ -632,8 +632,8 @@ function createNodesGeo($nodes){
 	// First interation through all nodes is used to collect IPs for geo api call. This way the batch functionality can be used
 	$ips = [];
 	foreach($nodes as &$node){
-		if ($noGeoData OR !in_array($node["IP"],array_column($arrayNodes,0))){
-			$ips[] = $node["IP"];
+		if ($noGeoData OR !in_array($node['IP'],array_column($arrayNodes,0))){
+			$ips[] = $node['IP'];
 		}
 	}
 	unset($node);
@@ -661,11 +661,11 @@ function createNodesGeo($nodes){
 				$arrayNodes[$nodeObj->id] = array($nodeObj->IP, $countryCode, $country, $region, $city, $isp, $hosted, 1);
 			}else{
 				// If IP-Api.com call failed we set all data to Unknown and don't store the data
-				$countryCode = "UN";
-				$country = "Unknown";
-				$region = "Unknown";
-				$city = "Unknown";
-				$isp = "Unknown";		 
+				$countryCode = 'UN';
+				$country = 'Unknown';
+				$region = 'Unknown';
+				$city = 'Unknown';
+				$isp = 'Unknown';		 
 				$hosted = false;
 				// Only counted for peers older than 2 minutes
 				$newNodesCount++;				
@@ -733,7 +733,7 @@ function getIpData($ips){
 			$m=$numOfIps-$j;
 		}
 		for($i = 0; $i < $m; $i++){
-			$postvars[$j][] =  array("query" => $ips[$i+$j]);
+			$postvars[$j][] =  array('query' => $ips[$i+$j]);
 		}
 		$j += $i;
 	}
@@ -754,7 +754,7 @@ function getIpData($ips){
 		curl_setopt($ch,CURLOPT_POSTFIELDS, $postvarJson);
 		$result = json_decode(curl_exec($ch),true);
 		if(empty($result)){
-			$error = "Geo API (ip-api.com) Timeout";
+			$error = 'Geo API (ip-api.com) Timeout';
 			$result = [];
 		}
 		$geojsonraw = array_merge($geojsonraw, $result);
@@ -770,7 +770,7 @@ function createMapJs(int $peerCount){
 	{
 		return $b['count'] - $a['count'];
 	}
-	uasort($countryList, "App\compare");
+	uasort($countryList, 'App\compare');
 
 	$i = 0;
 	$jqvData = 'var peerData = {';
@@ -796,7 +796,7 @@ function createMapJs(int $peerCount){
 		$country['share'] = round($country['count']/$peerCount,2)*100;
 	}
 	
-	$jqvData = rtrim($jqvData, ",");
+	$jqvData = rtrim($jqvData, ',');
 	$jqvData .= '};';
 	
 	// Writes data file for JVQMap
@@ -808,7 +808,7 @@ function createMapJs(int $peerCount){
 }
 
 function secondsToHuman($number_of_seconds, $out_seconds = True, $out_minutes = True, $out_hours = True){
-    $human_string = "";
+    $human_string = '';
 
     $weeks = 0;
     $days = 0;

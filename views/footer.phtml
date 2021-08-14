@@ -1,17 +1,17 @@
 <footer>
-	<div class="pull-right">
-		<i class="fas fa-cube black"></i> 
-		<a href="?p=main"> Scalaris Monitor v0.1.0 - © walkjivefly 2021</a>
+	<div class='pull-right'>
+		<i class='fas fa-cube black'></i> 
+		<a href='?p=main'> Scalaris Monitor v0.1.0 - © walkjivefly 2021</a>
 	</div>
-	<div class="clearfix"></div>
+	<div class='clearfix'></div>
 </footer>
 <script>
 	<?php
-	if($this->section === "main"){
-		$section = "";
+	if($this->section === 'main'){
+		$section = '';
 	}else{
-		$section = "?p=".$this->section;
+		$section = '?p='.$this->section;
 	}
 	?>
-	window.history.pushState("", "", "<?= $section ?>");
+	window.history.pushState('', '', '<?= $section ?>');
 </script>

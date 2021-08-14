@@ -7,7 +7,7 @@ class Template {
 
 	public function __construct($data = array()) {
 		$this->section = $data['section'];
-		$this->sectionPath = "views/".$this->section.".phtml";
+		$this->sectionPath = 'views/'.$this->section.'.phtml';
 		$this->data = $data;
 	}
 
