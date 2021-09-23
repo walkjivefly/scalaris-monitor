@@ -38,7 +38,7 @@ sudo chmod -R 755 $BM
 cat >$BM/index.html <<EOF
 <html>
 <head>
-<title>Welcome to the Block Monitor!</title>
+<title>Welcome to the Scalaris Monitor!</title>
 </head>
 <body>
 <h1>Be patient, the real Scalaris Monitor will be here soon!</h1>
