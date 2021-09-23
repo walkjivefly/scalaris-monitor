@@ -9,9 +9,8 @@
 					</div>
 					<div class='col-md-3 col-sm-4 col-xs-6 tile_stats_count'>
 					  <span class='count_top'><i class='fas fa-sitemap'></i> Servicenodes</span>
-					  <div class='count'><a href='?p=servicenodes'><?= $content['onlineNodes'] ?></a></div>
-					  <!--div class='count'><a href='?p=servicenodes'><?= ($content['onlineNodes']).' <small>Online</small>'?></a></div-->
-					  <span class='count_bottom'> Online </span>
+					  <div class="count"><a href="?p=servicenodes"><?= $content['totalNodes'] ." <small>Known</small>" ?></a></div>
+					  <span class="count_bottom"> <a href="?p=servicenodes"><?= ($content['xrNodes'])." XRouter"?></a> </span>
 					</div>
 					<div class='col-md-3 col-sm-4 col-xs-6 tile_stats_count'>
 					  <span class='count_top'><i class='fas fa-exchange-alt'></i> ScalarisDX open orders</span>

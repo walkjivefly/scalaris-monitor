@@ -1,4 +1,4 @@
-# Scalaris Monitor v0.1.1
+# Scalaris Monitor v0.2.0
 
 Scalaris Monitor (SPM) is a visualisation and monitoring system for the Scalaris network.
 ![](assets/images/scalarismonitor.png)
@@ -8,6 +8,10 @@ Scalaris Monitor (SPM) is a visualisation and monitoring system for the Scalaris
 
 * Extensive dashboard with general information about the node, connected peers and the blockchain
 * Overview of servicenodes
+* Overview of DX and SPV(XR) wallets on the network
+* Overview of XRouter services available
+* Overview of XCloud services available
+* Overview of ScalarisDX trades and fees
 * Overview of ScalarisDX open orders
 * Overview of ScalarisDX recently completed orders
 * Overview of active proposals in the Scalaris Decentralised Governance system
@@ -47,7 +51,7 @@ IP protection doesn't work here. If you use `Apache` you are fine, since the fol
 
 ## Roadmap
 
-- [ ] Loadsa brilliant stuff 
+- [ ] Loadsa brilliant stuff
 
 
 ## Suggested enhancements for community participation
@@ -65,5 +69,5 @@ IP protection doesn't work here. If you use `Apache` you are fine, since the fol
 ## Donate
 
 If you find the Scalaris Monitor useful I'm happy to accept donations at 
-[SWW9WwuwgvUANHwq26faVWUKHHNKzkgRep](https://explorer.scalaris.info/addr/SWW9WwuwgvUANHwq26faVWUKHHNKzkgRep)
+[SP2w5kbmQ6gKPEWhdjMVDoGpF4WH8PpRov](https://explorer.scalaris.info/address/SP2w5kbmQ6gKPEWhdjMVDoGpF4WH8PpRov)
 
