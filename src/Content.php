@@ -571,8 +571,8 @@ function createGovernanceContent(){
 function updatePastProposals(){
 	global $coind, $db;
 	$height = $coind->getblockcount();
-	$lastSuperblock = intdiv($height, 43200) * 43200;
-	$lastProposal = $db->querySingle('SELECT "lastproposal" FROM "events"') or 1296000;
+	$lastSuperblock = intdiv($height, 42000) * 42000;
+	$lastProposal = $db->querySingle('SELECT "lastproposal" FROM "events"') or 42000;
  
 	if($lastSuperblock <> $lastProposal){
 		//print("Checking proposals since block ".$lastProposal."\n");
